@@ -187,17 +187,16 @@ public class FilePickerPlugin extends Plugin {
             }
 
             int maxFiles = data.getIntExtra("MAX_FILES", 15);
-            AlertDialog dialog = new AlertDialog();
-            dialog.Builder(this);
-            dialog.setTitle(String.format("Limite de %d arquivos", maxFiles));
-            dialog.setMessage(String.format("Você pode selecionar até %d arquivos", maxFiles));
-            dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+            dialogBuilder.setTitle(String.format("Limite de %d arquivos", maxFiles));
+            dialogBuilder.setMessage(String.format("Você pode selecionar até %d arquivos", maxFiles));
+            dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.cancel();
                 }
             });
-            dialog.create();
-            dialog.show();
+            dialogBuilder.create();
+            dialogBuilder.show();
         }
         for (int i = 0; i < uris.size(); i++) {
             Uri uri = uris.get(i);
