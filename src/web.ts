@@ -17,6 +17,7 @@ import type {
 
 export class FilePickerWeb extends WebPlugin implements FilePickerPlugin {
   public readonly ERROR_PICK_FILE_CANCELED = 'pickFiles canceled.';
+  public readonly TOO_MANY_FILES = 'TOO_MANY_FILES.';
 
   public async convertHeicToJpeg(
     _options: ConvertHeicToJpegOptions,
@@ -81,7 +82,7 @@ export class FilePickerWeb extends WebPlugin implements FilePickerPlugin {
         'change',
         (event: any) => {
           if (event.target?.files?.length > maximumFilesCount) {
-            reject("TOO_MANY_FILES");
+            reject(this.TOO_MANY_FILES);
           }
           onChangeFired = true;
           const files = Array.from(input.files || []);

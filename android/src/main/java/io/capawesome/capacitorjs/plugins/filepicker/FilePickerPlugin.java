@@ -1,7 +1,9 @@
 package io.capawesome.capacitorjs.plugins.filepicker;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.util.Log;
 import androidx.activity.result.ActivityResult;
@@ -63,9 +65,11 @@ public class FilePickerPlugin extends Plugin {
     public void pickImages(PluginCall call) {
         try {
             boolean multiple = call.getBoolean("multiple", false);
+            boolean maximumFilesCount = call.getBoolean("maximumFilesCount", 15);
 
             Intent intent = new Intent(Intent.ACTION_PICK);
             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, multiple);
+            intent.putExtra("MAX_FILES", maximumFilesCount);
             intent.setType("image/*");
             intent.putExtra("multi-pick", multiple);
             intent.putExtra(Intent.EXTRA_MIME_TYPES, new String[] { "image/*" });
@@ -82,9 +86,11 @@ public class FilePickerPlugin extends Plugin {
     public void pickMedia(PluginCall call) {
         try {
             boolean multiple = call.getBoolean("multiple", false);
-
+            boolean maximumFilesCount = call.getBoolean("maximumFilesCount", 15);
+            
             Intent intent = new Intent(Intent.ACTION_PICK);
             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, multiple);
+            intent.putExtra("MAX_FILES", maximumFilesCount);
             intent.setType("*/*");
             intent.putExtra("multi-pick", multiple);
             intent.putExtra(Intent.EXTRA_MIME_TYPES, new String[] { "image/*", "video/*" });
@@ -101,9 +107,11 @@ public class FilePickerPlugin extends Plugin {
     public void pickVideos(PluginCall call) {
         try {
             boolean multiple = call.getBoolean("multiple", false);
+            boolean maximumFilesCount = call.getBoolean("maximumFilesCount", 15);
 
             Intent intent = new Intent(Intent.ACTION_PICK);
             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, multiple);
+            intent.putExtra("MAX_FILES", maximumFilesCount);
             intent.setType("video/*");
             intent.putExtra("multi-pick", multiple);
             intent.putExtra(Intent.EXTRA_MIME_TYPES, new String[] { "video/*" });
@@ -175,6 +183,18 @@ public class FilePickerPlugin extends Plugin {
                 Uri uri = data.getClipData().getItemAt(i).getUri();
                 uris.add(uri);
             }
+            
+            int maxFiles = data.getIntExtra("MAX_FILES", 15);
+            new AlertDialog.Builder(this)
+                    .setTitle(String.format("Limite de %d arquivos", maxFiles))
+                    .setMessage(String.format("Você pode selecionar até %d arquivos", maxFiles))
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    })
+                    .create()
+                    .show();
         }
         for (int i = 0; i < uris.size(); i++) {
             Uri uri = uris.get(i);
