@@ -43,12 +43,14 @@ public class FilePickerPlugin extends Plugin {
         try {
             JSArray types = call.getArray("types", null);
             boolean multiple = call.getBoolean("multiple", false);
+            int maximumFilesCount = call.getInt("maximumFilesCount", 15);
             String[] parsedTypes = parseTypesOption(types);
 
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.setType("*/*");
             intent.addCategory(Intent.CATEGORY_OPENABLE);
             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, multiple);
+            intent.putExtra("MAX_FILES", maximumFilesCount);
             if (multiple == false && parsedTypes != null && parsedTypes.length > 0) {
                 intent.putExtra(Intent.EXTRA_MIME_TYPES, parsedTypes);
             }
@@ -65,7 +67,7 @@ public class FilePickerPlugin extends Plugin {
     public void pickImages(PluginCall call) {
         try {
             boolean multiple = call.getBoolean("multiple", false);
-            boolean maximumFilesCount = call.getBoolean("maximumFilesCount", 15);
+            int maximumFilesCount = call.getInt("maximumFilesCount", 15);
 
             Intent intent = new Intent(Intent.ACTION_PICK);
             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, multiple);
@@ -86,7 +88,7 @@ public class FilePickerPlugin extends Plugin {
     public void pickMedia(PluginCall call) {
         try {
             boolean multiple = call.getBoolean("multiple", false);
-            boolean maximumFilesCount = call.getBoolean("maximumFilesCount", 15);
+            int maximumFilesCount = call.getInt("maximumFilesCount", 15);
             
             Intent intent = new Intent(Intent.ACTION_PICK);
             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, multiple);
@@ -107,7 +109,7 @@ public class FilePickerPlugin extends Plugin {
     public void pickVideos(PluginCall call) {
         try {
             boolean multiple = call.getBoolean("multiple", false);
-            boolean maximumFilesCount = call.getBoolean("maximumFilesCount", 15);
+            int maximumFilesCount = call.getInt("maximumFilesCount", 15);
 
             Intent intent = new Intent(Intent.ACTION_PICK);
             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, multiple);
@@ -183,7 +185,7 @@ public class FilePickerPlugin extends Plugin {
                 Uri uri = data.getClipData().getItemAt(i).getUri();
                 uris.add(uri);
             }
-            
+
             int maxFiles = data.getIntExtra("MAX_FILES", 15);
             new AlertDialog.Builder(this)
                     .setTitle(String.format("Limite de %d arquivos", maxFiles))
