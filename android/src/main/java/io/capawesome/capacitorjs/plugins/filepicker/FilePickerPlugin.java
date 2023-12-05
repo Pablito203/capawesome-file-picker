@@ -187,7 +187,7 @@ public class FilePickerPlugin extends Plugin {
             }
 
             int maxFiles = data.getIntExtra("MAX_FILES", 15);
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(null);
             dialogBuilder.setTitle(String.format("Limite de %d arquivos", maxFiles));
             dialogBuilder.setMessage(String.format("Você pode selecionar até %d arquivos", maxFiles));
             dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
