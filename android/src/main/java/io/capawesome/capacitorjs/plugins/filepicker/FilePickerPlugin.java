@@ -76,17 +76,6 @@ public class FilePickerPlugin extends Plugin {
             intent.putExtra("multi-pick", multiple);
             intent.putExtra(Intent.EXTRA_MIME_TYPES, new String[] { "image/*" });
 
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this.getActivity());
-            dialogBuilder.setTitle(String.format("Limite de %d arquivos", maximumFilesCount));
-            dialogBuilder.setMessage(String.format("Você pode selecionar até %d arquivos", maximumFilesCount));
-            dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
-            });
-            dialogBuilder.create();
-            dialogBuilder.show();
-
             startActivityForResult(call, intent, "pickFilesResult");
         } catch (Exception ex) {
             String message = ex.getMessage();
@@ -164,7 +153,14 @@ public class FilePickerPlugin extends Plugin {
             int resultCode = result.getResultCode();
             switch (resultCode) {
                 case Activity.RESULT_OK:
-                    JSObject callResult = createPickFilesResult(result.getData(), readData);
+                    Intent data = result.getData();
+                    int maximumFilesCount = call.getInt("maximumFilesCount", 15);
+                    if (!checkMaxFiles(data, maximumFilesCount)) {
+                        this.showLimitDialog(maximumFilesCount);
+                        call.reject("Limite de arquivos");
+                        break;
+                    }
+                    JSObject callResult = createPickFilesResult(data, readData);
                     call.resolve(callResult);
                     break;
                 case Activity.RESULT_CANCELED:
@@ -227,5 +223,27 @@ public class FilePickerPlugin extends Plugin {
         }
         callResult.put("files", JSArray.from(filesResultList.toArray()));
         return callResult;
+    }
+
+    private boolean checkMaxFiles(Intent data, int maximumFilesCount) {
+        if (data.getClipData() == null) {
+            return true;
+        }
+
+        int countFilesSelected = data.getClipData().getItemCount();
+
+        return countFilesSelected > maximumFilesCount;
+    }
+    private void showLimitDialog(int maximumFilesCount) {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this.getActivity());
+        dialogBuilder.setTitle(String.format("Limite de %d arquivos", maximumFilesCount));
+        dialogBuilder.setMessage(String.format("Você pode selecionar até %d arquivos", maximumFilesCount));
+        dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        dialogBuilder.create();
+        dialogBuilder.show();
     }
 }
