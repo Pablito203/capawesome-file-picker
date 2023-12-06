@@ -76,6 +76,17 @@ public class FilePickerPlugin extends Plugin {
             intent.putExtra("multi-pick", multiple);
             intent.putExtra(Intent.EXTRA_MIME_TYPES, new String[] { "image/*" });
 
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this.getActivity());
+            dialogBuilder.setTitle(String.format("Limite de %d arquivos", maximumFilesCount));
+            dialogBuilder.setMessage(String.format("Você pode selecionar até %d arquivos", maximumFilesCount));
+            dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            dialogBuilder.create();
+            dialogBuilder.show();
+
             startActivityForResult(call, intent, "pickFilesResult");
         } catch (Exception ex) {
             String message = ex.getMessage();
@@ -185,18 +196,6 @@ public class FilePickerPlugin extends Plugin {
                 Uri uri = data.getClipData().getItemAt(i).getUri();
                 uris.add(uri);
             }
-
-            int maxFiles = data.getIntExtra("MAX_FILES", 15);
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(null);
-            dialogBuilder.setTitle(String.format("Limite de %d arquivos", maxFiles));
-            dialogBuilder.setMessage(String.format("Você pode selecionar até %d arquivos", maxFiles));
-            dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
-            });
-            dialogBuilder.create();
-            dialogBuilder.show();
         }
         for (int i = 0; i < uris.size(); i++) {
             Uri uri = uris.get(i);
