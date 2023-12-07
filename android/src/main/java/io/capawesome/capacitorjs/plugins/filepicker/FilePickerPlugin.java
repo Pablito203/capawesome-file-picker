@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.DialogInterface;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.util.Log;
 import androidx.activity.result.ActivityResult;
 import androidx.annotation.Nullable;
@@ -69,11 +70,9 @@ public class FilePickerPlugin extends Plugin {
             boolean multiple = call.getBoolean("multiple", false);
             int maximumFilesCount = call.getInt("maximumFilesCount", 15);
 
-            Intent intent = new Intent(Intent.ACTION_PICK);
-            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, multiple);
-            intent.putExtra("MAX_FILES", maximumFilesCount);
+            Intent intent = new Intent(MediaStore.ACTION_PICK_IMAGES);
+            intent.putExtra(MediaStore.EXTRA_PICK_IMAGES_MAX, maximumFilesCount);
             intent.setType("image/*");
-            intent.putExtra("multi-pick", multiple);
             intent.putExtra(Intent.EXTRA_MIME_TYPES, new String[] { "image/*" });
 
             startActivityForResult(call, intent, "pickFilesResult");
@@ -92,7 +91,6 @@ public class FilePickerPlugin extends Plugin {
             
             Intent intent = new Intent(Intent.ACTION_PICK);
             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, multiple);
-            intent.putExtra("MAX_FILES", maximumFilesCount);
             intent.setType("*/*");
             intent.putExtra("multi-pick", multiple);
             intent.putExtra(Intent.EXTRA_MIME_TYPES, new String[] { "image/*", "video/*" });
@@ -113,7 +111,6 @@ public class FilePickerPlugin extends Plugin {
 
             Intent intent = new Intent(Intent.ACTION_PICK);
             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, multiple);
-            intent.putExtra("MAX_FILES", maximumFilesCount);
             intent.setType("video/*");
             intent.putExtra("multi-pick", multiple);
             intent.putExtra(Intent.EXTRA_MIME_TYPES, new String[] { "video/*" });
