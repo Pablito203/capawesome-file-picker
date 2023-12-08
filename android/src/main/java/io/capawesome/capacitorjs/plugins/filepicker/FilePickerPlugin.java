@@ -72,12 +72,11 @@ public class FilePickerPlugin extends Plugin {
             boolean multiple = call.getBoolean("multiple", false);
             int maximumFilesCount = call.getInt("maximumFilesCount", 15);
 
-            Intent intent = new Intent(MediaStore.ACTION_PICK_IMAGES);
+            Intent intent = new Intent(this.getActivity(), GalleryActivity.class);
+            intent.setAction(MediaStore.ACTION_PICK_IMAGES);
             intent.putExtra(MediaStore.EXTRA_PICK_IMAGES_MAX, maximumFilesCount);
             intent.setType("image/*");
             intent.putExtra(Intent.EXTRA_MIME_TYPES, new String[] { "image/*" });
-
-            intent.setClass(this.getActivity(), GalleryActivity.class);
 
             startActivityForResult(call, intent, "pickFilesResult");
         } catch (Exception ex) {
