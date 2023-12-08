@@ -92,7 +92,7 @@ public class FilePickerPlugin extends Plugin {
             boolean multiple = call.getBoolean("multiple", false);
             int maximumFilesCount = call.getInt("maximumFilesCount", 15);
             
-            Intent intent = new Intent(Intent.ACTION_PICK);
+            Intent intent = new Intent(MediaStore.ACTION_PICK_IMAGES);
             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, multiple);
             intent.setType("*/*");
             intent.putExtra("multi-pick", multiple);
