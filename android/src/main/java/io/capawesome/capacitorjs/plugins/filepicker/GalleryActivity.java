@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.Toolbar;
 
 import androidx.appcompat.app.ActionBar;
 
@@ -21,8 +22,8 @@ public class GalleryActivity extends AppCompatActivity {
 
         int maximumFilesCount = 3;
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        dialogBuilder.setTitle(String.format("Limite de %d arquivos", view.getId()));
-        dialogBuilder.setMessage(String.format("Você pode selecionar até %d arquivos", view.));
+        dialogBuilder.setTitle(String.format("Limite de %d arquivos", maximumFilesCount));
+        dialogBuilder.setMessage(String.format("Você pode selecionar até %d arquivos", maximumFilesCount));
         dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
@@ -32,6 +33,7 @@ public class GalleryActivity extends AppCompatActivity {
         dialogBuilder.show();
 
         setupHeader();
+        setupFooter();
     }
 
     private void setupHeader() {
@@ -39,7 +41,7 @@ public class GalleryActivity extends AppCompatActivity {
         View header = inflater.inflate(R.layout.header, null);
 
         // Show the custom action bar view and hide the normal Home icon and title.
-        ActionBar actionBar = getSupportActionBar();
+        ActionBar actionBar = getSupportToolBar();
         if (actionBar != null) {
             actionBar.setDisplayOptions(
                     ActionBar.DISPLAY_SHOW_CUSTOM,
@@ -48,6 +50,26 @@ public class GalleryActivity extends AppCompatActivity {
                             | ActionBar.DISPLAY_SHOW_TITLE
             );
             actionBar.setCustomView(header, new ActionBar.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+            ));
+        }
+    }
+
+    private void setupFooter() {
+        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        View footer = inflater.inflate(R.layout.header, null);
+
+        // Show the custom action bar view and hide the normal Home icon and title.
+        ActionBar actionBar = getSupportToolBar();
+        if (actionBar != null) {
+            actionBar.setDisplayOptions(
+                    ActionBar.DISPLAY_SHOW_CUSTOM,
+                    ActionBar.DISPLAY_SHOW_CUSTOM
+                            | ActionBar.DISPLAY_SHOW_HOME
+                            | ActionBar.DISPLAY_SHOW_TITLE
+            );
+            actionBar.setCustomView(footer, new ActionBar.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT
             ));
