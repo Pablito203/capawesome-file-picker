@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.View;
+
 import androidx.activity.result.ActivityResult;
 import androidx.annotation.Nullable;
 import com.getcapacitor.JSArray;
@@ -74,6 +76,8 @@ public class FilePickerPlugin extends Plugin {
             intent.putExtra(MediaStore.EXTRA_PICK_IMAGES_MAX, maximumFilesCount);
             intent.setType("image/*");
             intent.putExtra(Intent.EXTRA_MIME_TYPES, new String[] { "image/*" });
+
+            intent.setClass(this.getActivity(), GalleryActivity.class);
 
             startActivityForResult(call, intent, "pickFilesResult");
         } catch (Exception ex) {
