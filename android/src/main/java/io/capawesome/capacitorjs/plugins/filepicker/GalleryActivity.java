@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-import android.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
 
 import androidx.appcompat.app.ActionBar;
 
@@ -33,15 +33,14 @@ public class GalleryActivity extends AppCompatActivity {
         dialogBuilder.show();
 
         setupHeader();
-        setupFooter();
     }
 
     private void setupHeader() {
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        View header = inflater.inflate(R.layout.header, null);
+        View header = findViewById(R.id.action_bar);
 
         // Show the custom action bar view and hide the normal Home icon and title.
-        ActionBar actionBar = getSupportToolBar();
+        ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayOptions(
                     ActionBar.DISPLAY_SHOW_CUSTOM,
@@ -50,26 +49,6 @@ public class GalleryActivity extends AppCompatActivity {
                             | ActionBar.DISPLAY_SHOW_TITLE
             );
             actionBar.setCustomView(header, new ActionBar.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT
-            ));
-        }
-    }
-
-    private void setupFooter() {
-        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        View footer = inflater.inflate(R.layout.header, null);
-
-        // Show the custom action bar view and hide the normal Home icon and title.
-        ActionBar actionBar = getSupportToolBar();
-        if (actionBar != null) {
-            actionBar.setDisplayOptions(
-                    ActionBar.DISPLAY_SHOW_CUSTOM,
-                    ActionBar.DISPLAY_SHOW_CUSTOM
-                            | ActionBar.DISPLAY_SHOW_HOME
-                            | ActionBar.DISPLAY_SHOW_TITLE
-            );
-            actionBar.setCustomView(footer, new ActionBar.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT
             ));
