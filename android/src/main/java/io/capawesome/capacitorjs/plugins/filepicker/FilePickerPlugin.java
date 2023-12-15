@@ -1,5 +1,7 @@
 package io.capawesome.capacitorjs.plugins.filepicker;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -78,7 +80,18 @@ public class FilePickerPlugin extends Plugin {
             intent.setType("image/*");
             intent.putExtra(Intent.EXTRA_MIME_TYPES, new String[] { "image/*" });
 
-            startActivityForResult(call, intent, "pickFilesResult");
+            Matisse.from(this.getActivity())
+                    .choose(MimeType.allOf())
+                    .countable(true)
+                    .maxSelectable(9)
+                    .addFilter(new GifSizeFilter(320, 320, 5 * Filter.K * Filter.K))
+                    .gridExpectedSize(getResources().getDimensionPixelSize(R.dimen.grid_expected_size))
+                    .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
+                    .thumbnailScale(0.85f)
+                    .imageEngine(new GlideEngine())
+                    .showPreview(false) // Default is `true`
+                    .forResult(REQUEST_CODE_CHOOSE);
+            //startActivityForResult(call, intent, "pickFilesResult");
         } catch (Exception ex) {
             String message = ex.getMessage();
             Log.e(TAG, message);
@@ -144,35 +157,11 @@ public class FilePickerPlugin extends Plugin {
     }
 
     @ActivityCallback
-    private void pickFilesResult(PluginCall call, ActivityResult result) {
-        try {
-            if (call == null) {
-                return;
-            }
-            boolean readData = call.getBoolean("readData", false);
-            int resultCode = result.getResultCode();
-            switch (resultCode) {
-                case Activity.RESULT_OK:
-                    Intent data = result.getData();
-                    int maximumFilesCount = call.getInt("maximumFilesCount", 15);
-                    if (!checkMaxFiles(data, maximumFilesCount)) {
-                        this.showLimitDialog(maximumFilesCount);
-                        call.reject("Limite de arquivos");
-                        break;
-                    }
-                    JSObject callResult = createPickFilesResult(data, readData);
-                    call.resolve(callResult);
-                    break;
-                case Activity.RESULT_CANCELED:
-                    call.reject(ERROR_PICK_FILE_CANCELED);
-                    break;
-                default:
-                    call.reject(ERROR_PICK_FILE_FAILED);
-            }
-        } catch (Exception ex) {
-            String message = ex.getMessage();
-            Log.e(TAG, message);
-            call.reject(message);
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            mSelected = Matisse.obtainResult(data);
+            Log.d("Matisse", "mSelected: " + mSelected);
         }
     }
 
