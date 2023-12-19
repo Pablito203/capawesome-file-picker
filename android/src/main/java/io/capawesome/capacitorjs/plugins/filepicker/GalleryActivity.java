@@ -12,7 +12,9 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,6 +28,14 @@ import androidx.loader.content.Loader;
 
 
 public class GalleryActivity extends AppCompatActivity implements OnItemClickListener, LoaderManager.LoaderCallbacks<Cursor> {
+    private ImageAdapter ia;
+
+    private Cursor imagecursor, actualimagecursor;
+    private int image_column_index, image_column_orientation, actual_image_column_index, orientation_column_index;
+    private int colWidth;
+
+    private static final int CURSORLOADER_THUMBS = 0;
+    private static final int CURSORLOADER_REAL = 1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,6 +83,13 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
                 }
             }
         });
+
+        ia = new ImageAdapter();
+        gridView.setAdapter(ia);
+
+        LoaderManager.enableDebugLogging(false);
+        LoaderManager.getInstance(this).initLoader(CURSORLOADER_THUMBS, null, this);
+        LoaderManager.getInstance(this).initLoader(CURSORLOADER_REAL, null, this);
     }
 
     private void setupHeader() {
@@ -114,5 +131,72 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
     @Override
     public void onLoaderReset(@NonNull Loader<Cursor> loader) {
 
+    }
+
+    private class SquareImageView extends ImageView {
+        public SquareImageView(Context context) {
+            super(context);
+        }
+
+        @Override
+        public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+            super.onMeasure(widthMeasureSpec, widthMeasureSpec);
+        }
+    }
+
+    private class ImageAdapter extends BaseAdapter {
+
+        public int getCount() {
+            if (imagecursor != null) {
+                return imagecursor.getCount();
+            } else {
+                return 0;
+            }
+        }
+
+        public Object getItem(int position) {
+            return position;
+        }
+
+        public long getItemId(int position) {
+            return position;
+        }
+
+        // create a new ImageView for each item referenced by the Adapter
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            if (convertView == null) {
+                ImageView temp = new SquareImageView(GalleryActivity.this);
+                temp.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                convertView = temp;
+            }
+
+            ImageView imageView = (ImageView) convertView;
+            imageView.setImageBitmap(null);
+
+            if (!imagecursor.moveToPosition(position)) {
+                return imageView;
+            }
+
+            if (image_column_index == -1) {
+                return imageView;
+            }
+
+            final int id = imagecursor.getInt(image_column_index);
+            final int rotate = imagecursor.getInt(image_column_orientation);
+
+           // if (isChecked(position)) {
+                //imageView.setImageAlpha(128);
+               // imageView.setBackgroundColor(selectedColor);
+//                imageView.setImageAlpha(255);
+                //imageView.setBackgroundColor(Color.TRANSPARENT);
+          //  }
+
+           // if (shouldRequestThumb) {
+            //    fetcher.fetch(id, imageView, colWidth, rotate);
+           // }
+
+            return imageView;
+        }
     }
 }
