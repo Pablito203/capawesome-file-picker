@@ -149,13 +149,39 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
     }
 
     @Override
-    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor cursor) {
+        if (cursor == null) {
+            // NULL cursor. This usually means there's no image database yet....
+            return;
+        }
 
+        switch (loader.getId()) {
+            case CURSORLOADER_THUMBS:
+                imagecursor = cursor;
+                image_column_index = imagecursor.getColumnIndex(MediaStore.Images.Media._ID);
+                image_column_orientation = imagecursor.getColumnIndex(MediaStore.Images.Media.ORIENTATION);
+                ia.notifyDataSetChanged();
+                break;
+
+            case CURSORLOADER_REAL:
+                actualimagecursor = cursor;
+                actual_image_column_index = actualimagecursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                orientation_column_index = actualimagecursor.getColumnIndexOrThrow(MediaStore.Images.Media.ORIENTATION);
+                break;
+        }
     }
 
     @Override
     public void onLoaderReset(@NonNull Loader<Cursor> loader) {
+        switch (loader.getId()) {
+            case CURSORLOADER_THUMBS:
+                imagecursor = null;
+                break;
 
+            case CURSORLOADER_REAL:
+                actualimagecursor = null;
+                break;
+        }
     }
 
     private class SquareImageView extends androidx.appcompat.widget.AppCompatImageView {
