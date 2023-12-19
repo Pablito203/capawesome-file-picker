@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -25,7 +26,10 @@ import androidx.appcompat.app.ActionBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.loader.app.LoaderManager;
+import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
+
+import java.util.ArrayList;
 
 
 public class GalleryActivity extends AppCompatActivity implements OnItemClickListener, LoaderManager.LoaderCallbacks<Cursor> {
@@ -121,7 +125,27 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
     @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
-        return null;
+        ArrayList<String> img = new ArrayList<String>();
+        switch (id) {
+            case CURSORLOADER_THUMBS:
+                img.add(MediaStore.Images.Media._ID);
+                img.add(MediaStore.Images.Media.ORIENTATION);
+                break;
+
+            case CURSORLOADER_REAL:
+                img.add(MediaStore.Images.Thumbnails.DATA);
+                img.add(MediaStore.Images.Media.ORIENTATION);
+                break;
+        }
+
+        return new CursorLoader(
+                this,
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                img.toArray(new String[img.size()]),
+                null,
+                null,
+                "DATE_MODIFIED DESC"
+        );
     }
 
     @Override
