@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.Display;
 import android.view.View;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -41,6 +42,10 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
 
     private static final int CURSORLOADER_THUMBS = 0;
     private static final int CURSORLOADER_REAL = 1;
+    private final ImageFetcher fetcher = new ImageFetcher();
+
+    private int selectedColor = 0xff32b2e1;
+    private boolean shouldRequestThumb = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,6 +65,11 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
         dialogBuilder.show();
 
         setupHeader();
+
+        Display display = getWindowManager().getDefaultDisplay();
+        int width = display.getWidth();
+
+        colWidth = width / 4;
 
         GridView gridView = (GridView) findViewById(R.id.gridview);
         gridView.setOnItemClickListener(this);
@@ -243,9 +253,9 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
                 //imageView.setBackgroundColor(Color.TRANSPARENT);
           //  }
 
-           // if (shouldRequestThumb) {
-            //    fetcher.fetch(id, imageView, colWidth, rotate);
-           // }
+            if (shouldRequestThumb) {
+                fetcher.fetch(id, imageView, colWidth, rotate);
+            }
 
             return imageView;
         }
