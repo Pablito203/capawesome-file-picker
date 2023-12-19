@@ -3,6 +3,7 @@ package io.capawesome.capacitorjs.plugins.filepicker;
 import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -133,7 +134,7 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
 
     }
 
-    private class SquareImageView extends ImageView {
+    private class SquareImageView extends androidx.appcompat.widget.AppCompatImageView {
         public SquareImageView(Context context) {
             super(context);
         }
