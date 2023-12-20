@@ -6,8 +6,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.SparseBooleanArray;
 import android.view.Display;
 import android.view.View;
 import android.view.LayoutInflater;
@@ -31,21 +33,24 @@ import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class GalleryActivity extends AppCompatActivity implements OnItemClickListener, LoaderManager.LoaderCallbacks<Cursor> {
     private ImageAdapter ia;
-
     private Cursor imagecursor, actualimagecursor;
     private int image_column_index, image_column_orientation, actual_image_column_index, orientation_column_index;
     private int colWidth;
-
     private static final int CURSORLOADER_THUMBS = 0;
-    private static final int CURSORLOADER_REAL = 1;
     private final ImageFetcher fetcher = new ImageFetcher();
 
     private int selectedColor = 0xff32b2e1;
     private boolean shouldRequestThumb = true;
+
+    private Map<String, Integer> fileNames = new HashMap<String, Integer>();
+
+    private SparseBooleanArray checkStatus = new SparseBooleanArray();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -104,7 +109,6 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
 
         LoaderManager.enableDebugLogging(false);
         LoaderManager.getInstance(this).initLoader(CURSORLOADER_THUMBS, null, this);
-        LoaderManager.getInstance(this).initLoader(CURSORLOADER_REAL, null, this);
     }
 
     private void setupHeader() {
@@ -129,7 +133,57 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        String name = getImageName(position);
+        int rotation = getImageRotation(position);
 
+        if (name == null) {
+            return;
+        }
+
+        boolean isChecked = !isChecked(position);
+
+        if (isChecked && 3 == 1) {
+            isChecked = false;
+            new AlertDialog.Builder(this)
+                    .setTitle(String.format(getString(fakeR.getId("string", "max_count_photos_title")), maxImageCount))
+                    .setMessage(String.format(getString(fakeR.getId("string", "max_count_photos_message")), maxImageCount))
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    })
+                    .create()
+                    .show();
+
+        } else if (isChecked) {
+            fileNames.put(name, rotation);
+
+            if (3 == 1) {
+                //selectClicked();
+
+            } else {
+                //maxImages--;
+                ImageView imageView = (ImageView) view;
+
+                imageView.setImageAlpha(128);
+                view.setBackgroundColor(selectedColor);
+            }
+        } else {
+            fileNames.remove(name);
+            //maxImages++;
+            ImageView imageView = (ImageView) view;
+
+            if (android.os.Build.VERSION.SDK_INT >= 16) {
+                imageView.setImageAlpha(255);
+            } else {
+                imageView.setAlpha(255);
+            }
+
+            view.setBackgroundColor(Color.TRANSPARENT);
+        }
+
+        checkStatus.put(position, isChecked);
+        //updateAcceptButton();
     }
 
     @NonNull
@@ -139,11 +193,6 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
         switch (id) {
             case CURSORLOADER_THUMBS:
                 img.add(MediaStore.Images.Media._ID);
-                img.add(MediaStore.Images.Media.ORIENTATION);
-                break;
-
-            case CURSORLOADER_REAL:
-                img.add(MediaStore.Images.Thumbnails.DATA);
                 img.add(MediaStore.Images.Media.ORIENTATION);
                 break;
         }
@@ -172,12 +221,6 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
                 image_column_orientation = imagecursor.getColumnIndex(MediaStore.Images.Media.ORIENTATION);
                 ia.notifyDataSetChanged();
                 break;
-
-            case CURSORLOADER_REAL:
-                actualimagecursor = cursor;
-                actual_image_column_index = actualimagecursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                orientation_column_index = actualimagecursor.getColumnIndexOrThrow(MediaStore.Images.Media.ORIENTATION);
-                break;
         }
     }
 
@@ -187,11 +230,38 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
             case CURSORLOADER_THUMBS:
                 imagecursor = null;
                 break;
-
-            case CURSORLOADER_REAL:
-                actualimagecursor = null;
-                break;
         }
+    }
+
+
+    private String getImageName(int position) {
+        actualimagecursor.moveToPosition(position);
+        String name = null;
+
+        try {
+            name = actualimagecursor.getString(actual_image_column_index);
+        } catch (Exception e) {
+            // Do something?
+        }
+
+        return name;
+    }
+
+    private int getImageRotation(int position) {
+        actualimagecursor.moveToPosition(position);
+        int rotation = 0;
+
+        try {
+            rotation = actualimagecursor.getInt(orientation_column_index);
+        } catch (Exception e) {
+            // Do something?
+        }
+
+        return rotation;
+    }
+
+    public boolean isChecked(int position) {
+        return checkStatus.get(position);
     }
 
     private class SquareImageView extends androidx.appcompat.widget.AppCompatImageView {
