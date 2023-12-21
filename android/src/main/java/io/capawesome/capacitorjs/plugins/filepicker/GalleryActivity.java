@@ -43,9 +43,8 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
     private int image_column_index, image_column_orientation, actual_image_column_index, orientation_column_index;
     private int colWidth;
     private static final int CURSORLOADER_THUMBS = 0;
+    private static final int CURSORLOADER_REAL = 1;
     private final ImageFetcher fetcher = new ImageFetcher();
-
-    private int selectedColor = 0xff32b2e1;
     private boolean shouldRequestThumb = true;
 
     private Map<String, Integer> fileNames = new HashMap<String, Integer>();
@@ -109,6 +108,7 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
 
         LoaderManager.enableDebugLogging(false);
         LoaderManager.getInstance(this).initLoader(CURSORLOADER_THUMBS, null, this);
+        LoaderManager.getInstance(this).initLoader(CURSORLOADER_REAL, null, this);
     }
 
     private void setupHeader() {
@@ -166,18 +166,14 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
                 ImageView imageView = (ImageView) view;
 
                 imageView.setImageAlpha(128);
-                view.setBackgroundColor(selectedColor);
+                view.setBackgroundColor(Color.BLACK);
             }
         } else {
             fileNames.remove(name);
             //maxImages++;
             ImageView imageView = (ImageView) view;
 
-            if (android.os.Build.VERSION.SDK_INT >= 16) {
-                imageView.setImageAlpha(255);
-            } else {
-                imageView.setAlpha(255);
-            }
+            imageView.setImageAlpha(255);
 
             view.setBackgroundColor(Color.TRANSPARENT);
         }
@@ -193,6 +189,11 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
         switch (id) {
             case CURSORLOADER_THUMBS:
                 img.add(MediaStore.Images.Media._ID);
+                img.add(MediaStore.Images.Media.ORIENTATION);
+                break;
+
+            case CURSORLOADER_REAL:
+                img.add(MediaStore.Images.Thumbnails.DATA);
                 img.add(MediaStore.Images.Media.ORIENTATION);
                 break;
         }
@@ -221,6 +222,12 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
                 image_column_orientation = imagecursor.getColumnIndex(MediaStore.Images.Media.ORIENTATION);
                 ia.notifyDataSetChanged();
                 break;
+
+            case CURSORLOADER_REAL:
+                actualimagecursor = cursor;
+                actual_image_column_index = actualimagecursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                orientation_column_index = actualimagecursor.getColumnIndexOrThrow(MediaStore.Images.Media.ORIENTATION);
+                break;
         }
     }
 
@@ -228,6 +235,9 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
     public void onLoaderReset(@NonNull Loader<Cursor> loader) {
         switch (loader.getId()) {
             case CURSORLOADER_THUMBS:
+                imagecursor = null;
+                break;
+            case CURSORLOADER_REAL:
                 imagecursor = null;
                 break;
         }
