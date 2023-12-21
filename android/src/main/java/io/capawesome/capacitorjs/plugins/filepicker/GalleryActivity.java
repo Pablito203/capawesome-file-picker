@@ -40,10 +40,9 @@ import java.util.Map;
 public class GalleryActivity extends AppCompatActivity implements OnItemClickListener, LoaderManager.LoaderCallbacks<Cursor> {
     private ImageAdapter ia;
     private Cursor imagecursor, actualimagecursor;
-    private int image_column_index, image_column_orientation, actual_image_column_index, orientation_column_index;
+    private int image_column_index, image_column_orientation;
     private int colWidth;
     private static final int CURSORLOADER_THUMBS = 0;
-    private static final int CURSORLOADER_REAL = 1;
     private final ImageFetcher fetcher = new ImageFetcher();
     private boolean shouldRequestThumb = true;
 
@@ -108,7 +107,6 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
 
         LoaderManager.enableDebugLogging(false);
         LoaderManager.getInstance(this).initLoader(CURSORLOADER_THUMBS, null, this);
-        LoaderManager.getInstance(this).initLoader(CURSORLOADER_REAL, null, this);
     }
 
     private void setupHeader() {
@@ -144,17 +142,6 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
 
         if (isChecked && 3 == 1) {
             isChecked = false;
-            new AlertDialog.Builder(this)
-                    .setTitle(String.format(getString(fakeR.getId("string", "max_count_photos_title")), maxImageCount))
-                    .setMessage(String.format(getString(fakeR.getId("string", "max_count_photos_message")), maxImageCount))
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    })
-                    .create()
-                    .show();
-
         } else if (isChecked) {
             fileNames.put(name, rotation);
 
@@ -191,11 +178,6 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
                 img.add(MediaStore.Images.Media._ID);
                 img.add(MediaStore.Images.Media.ORIENTATION);
                 break;
-
-            case CURSORLOADER_REAL:
-                img.add(MediaStore.Images.Thumbnails.DATA);
-                img.add(MediaStore.Images.Media.ORIENTATION);
-                break;
         }
 
         return new CursorLoader(
@@ -222,12 +204,6 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
                 image_column_orientation = imagecursor.getColumnIndex(MediaStore.Images.Media.ORIENTATION);
                 ia.notifyDataSetChanged();
                 break;
-
-            case CURSORLOADER_REAL:
-                actualimagecursor = cursor;
-                actual_image_column_index = actualimagecursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                orientation_column_index = actualimagecursor.getColumnIndexOrThrow(MediaStore.Images.Media.ORIENTATION);
-                break;
         }
     }
 
@@ -237,19 +213,16 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
             case CURSORLOADER_THUMBS:
                 imagecursor = null;
                 break;
-            case CURSORLOADER_REAL:
-                imagecursor = null;
-                break;
         }
     }
 
 
     private String getImageName(int position) {
-        actualimagecursor.moveToPosition(position);
+        imagecursor.moveToPosition(position);
         String name = null;
 
         try {
-            name = actualimagecursor.getString(actual_image_column_index);
+            name = imagecursor.getString(image_column_index);
         } catch (Exception e) {
             // Do something?
         }
@@ -258,11 +231,11 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
     }
 
     private int getImageRotation(int position) {
-        actualimagecursor.moveToPosition(position);
+        imagecursor.moveToPosition(position);
         int rotation = 0;
 
         try {
-            rotation = actualimagecursor.getInt(orientation_column_index);
+            rotation = imagecursor.getInt(image_column_orientation);
         } catch (Exception e) {
             // Do something?
         }
@@ -326,12 +299,13 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
             final int id = imagecursor.getInt(image_column_index);
             final int rotate = imagecursor.getInt(image_column_orientation);
 
-           // if (isChecked(position)) {
-                //imageView.setImageAlpha(128);
-               // imageView.setBackgroundColor(selectedColor);
-//                imageView.setImageAlpha(255);
-                //imageView.setBackgroundColor(Color.TRANSPARENT);
-          //  }
+            if (isChecked(position)) {
+                imageView.setImageAlpha(128);
+                imageView.setBackgroundColor(Color.BLACK);
+            } else {
+                imageView.setImageAlpha(255);
+                imageView.setBackgroundColor(Color.TRANSPARENT);
+            }
 
             if (shouldRequestThumb) {
                 fetcher.fetch(id, imageView, colWidth, rotate);
