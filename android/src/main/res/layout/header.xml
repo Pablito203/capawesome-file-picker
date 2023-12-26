@@ -32,7 +32,6 @@
         android:paddingEnd="10dp"
         android:layout_centerHorizontal="true"
         android:textColor="@android:color/black"
-        android:drawableLeft="@drawable/cerclebackground"
         android:textSize="20dp" />
 
 </RelativeLayout>

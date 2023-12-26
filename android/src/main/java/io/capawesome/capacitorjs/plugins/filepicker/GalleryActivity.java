@@ -305,38 +305,40 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
         public View getView(int position, View convertView, ViewGroup parent) {
 
             if (convertView == null) {
-                ImageGridView temp = new ImageGridView(GalleryActivity.this);
-                temp.mThumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                convertView = temp;
+                convertView = View .inflate (GalleryActivity.this , R .layout .image_grid_view , null );
             }
 
-            ImageGridView imageGridView = (ImageGridView) convertView;
-            imageGridView.mThumbnail.setImageBitmap(null);
+            ImageView thumbnail = convertView .findViewById (R .id .media_thumbnail );
+            RadioCheckView radioCheckView = convertView .findViewById (R .id .check_view );
+            thumbnail .setScaleType(ImageView.ScaleType.CENTER_CROP);
+            thumbnail.setImageBitmap(null);
 
             if (!imagecursor.moveToPosition(position)) {
-                return imageGridView;
+                return convertView;
             }
 
             if (image_column_index == -1) {
-                return imageGridView;
+                return convertView;
             }
 
             final int id = imagecursor.getInt(image_column_index);
             final int rotate = imagecursor.getInt(image_column_orientation);
 
             if (isChecked(position)) {
-                imageGridView.mThumbnail.setImageAlpha(128);
-                imageGridView.setBackgroundColor(Color.BLACK);
+                thumbnail.setImageAlpha(128);
+                thumbnail.setBackgroundColor(Color.BLACK);
+                radioCheckView.setChecked(true);
             } else {
-                imageGridView.mThumbnail.setImageAlpha(255);
-                imageGridView.mThumbnail.setBackgroundColor(Color.TRANSPARENT);
+                thumbnail.setImageAlpha(255);
+                thumbnail.setBackgroundColor(Color.TRANSPARENT);
+                radioCheckView.setChecked(false);
             }
 
             if (shouldRequestThumb) {
-                fetcher.fetch(id, imageGridView.mThumbnail, colWidth, rotate);
+                fetcher.fetch(id, thumbnail, colWidth, rotate);
             }
 
-            return imageGridView;
+            return convertView;
         }
     }
 }
