@@ -151,21 +151,24 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
                 //selectClicked();
 
             } else {
-                //maxImages--;
-                ImageGridView imageGridView = (ImageGridView) view;
+                //maxImages--;;
+                ImageView thumbnail = view .findViewById (R .id .media_thumbnail );
+                RadioCheckView radioCheckView = view .findViewById (R .id .check_view );
 
-                imageGridView.mThumbnail.setImageAlpha(128);
-                imageGridView.mThumbnail.setBackgroundColor(Color.BLACK);
-                imageGridView.mRadioCheckView.setChecked(true);
+                thumbnail.setImageAlpha(128);
+                thumbnail.setBackgroundColor(Color.BLACK);
+                radioCheckView.setChecked(true);
             }
         } else {
             fileNames.remove(name);
             //maxImages++;
-            ImageGridView imageGridView = (ImageGridView) view;
 
-            imageGridView.mThumbnail.setImageAlpha(255);
-            imageGridView.mThumbnail.setBackgroundColor(Color.TRANSPARENT);
-            imageGridView.mRadioCheckView.setChecked(false);
+            ImageView thumbnail = view .findViewById (R .id .media_thumbnail );
+            RadioCheckView radioCheckView = view .findViewById (R .id .check_view );
+
+            thumbnail.setImageAlpha(255);
+            thumbnail.setBackgroundColor(Color.TRANSPARENT);
+            radioCheckView.setChecked(false);
         }
 
         checkStatus.put(position, isChecked);
@@ -258,28 +261,6 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
         @Override
         public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
             super.onMeasure(widthMeasureSpec, widthMeasureSpec);
-        }
-    }
-
-    private class ImageGridView extends FrameLayout {
-        ImageView mThumbnail;
-        RadioCheckView mRadioCheckView;
-
-        public ImageGridView(Context context) {
-            super(context);
-            init(context);
-        }
-
-        @Override
-        public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-            super.onMeasure(widthMeasureSpec, widthMeasureSpec);
-        }
-
-        private void init(Context context) {
-            LayoutInflater.from(context).inflate(R.layout.image_grid_view, this, true);
-
-            mThumbnail = (ImageView) findViewById(R.id.media_thumbnail);
-            mRadioCheckView = (RadioCheckView) findViewById(R.id.check_view);
         }
     }
 
