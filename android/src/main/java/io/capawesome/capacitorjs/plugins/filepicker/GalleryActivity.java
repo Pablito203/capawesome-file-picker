@@ -18,8 +18,10 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -83,8 +85,8 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 if (scrollState == SCROLL_STATE_IDLE) {
-                    //shouldRequestThumb = true;
-                    //ia.notifyDataSetChanged();
+                    shouldRequestThumb = true;
+                    ia.notifyDataSetChanged();
                 }
             }
 
@@ -97,7 +99,7 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
                     timestamp = System.currentTimeMillis();
 
                     // Limit if we go faster than a page a second
-                    //shouldRequestThumb = speed < visibleItemCount;
+                    shouldRequestThumb = speed < visibleItemCount;
                 }
             }
         });
@@ -150,19 +152,20 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
 
             } else {
                 //maxImages--;
-                ImageView imageView = (ImageView) view;
+                ImageGridView imageGridView = (ImageGridView) view;
 
-                imageView.setImageAlpha(128);
-                view.setBackgroundColor(Color.BLACK);
+                imageGridView.mThumbnail.setImageAlpha(128);
+                imageGridView.mThumbnail.setBackgroundColor(Color.BLACK);
+                imageGridView.mRadioCheckView.setChecked(true);
             }
         } else {
             fileNames.remove(name);
             //maxImages++;
-            ImageView imageView = (ImageView) view;
+            ImageGridView imageGridView = (ImageGridView) view;
 
-            imageView.setImageAlpha(255);
-
-            view.setBackgroundColor(Color.TRANSPARENT);
+            imageGridView.mThumbnail.setImageAlpha(255);
+            imageGridView.mThumbnail.setBackgroundColor(Color.TRANSPARENT);
+            imageGridView.mRadioCheckView.setChecked(false);
         }
 
         checkStatus.put(position, isChecked);
@@ -258,6 +261,28 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
         }
     }
 
+    private class ImageGridView extends FrameLayout {
+        ImageView mThumbnail;
+        RadioCheckView mRadioCheckView;
+
+        public ImageGridView(Context context) {
+            super(context);
+            init(context);
+        }
+
+        @Override
+        public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+            super.onMeasure(widthMeasureSpec, widthMeasureSpec);
+        }
+
+        private void init(Context context) {
+            LayoutInflater.from(context).inflate(R.layout.image_grid_view, this, true);
+
+            mThumbnail = (ImageView) findViewById(R.id.media_thumbnail);
+            mRadioCheckView = (RadioCheckView) findViewById(R.id.check_view);
+        }
+    }
+
     private class ImageAdapter extends BaseAdapter {
 
         public int getCount() {
@@ -280,38 +305,38 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
         public View getView(int position, View convertView, ViewGroup parent) {
 
             if (convertView == null) {
-                ImageView temp = new SquareImageView(GalleryActivity.this);
-                temp.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                ImageGridView temp = new ImageGridView(GalleryActivity.this);
+                temp.mThumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 convertView = temp;
             }
 
-            ImageView imageView = (ImageView) convertView;
-            imageView.setImageBitmap(null);
+            ImageGridView imageGridView = (ImageGridView) convertView;
+            imageGridView.mThumbnail.setImageBitmap(null);
 
             if (!imagecursor.moveToPosition(position)) {
-                return imageView;
+                return imageGridView;
             }
 
             if (image_column_index == -1) {
-                return imageView;
+                return imageGridView;
             }
 
             final int id = imagecursor.getInt(image_column_index);
             final int rotate = imagecursor.getInt(image_column_orientation);
 
             if (isChecked(position)) {
-                imageView.setImageAlpha(128);
-                imageView.setBackgroundColor(Color.BLACK);
+                imageGridView.mThumbnail.setImageAlpha(128);
+                imageGridView.setBackgroundColor(Color.BLACK);
             } else {
-                imageView.setImageAlpha(255);
-                imageView.setBackgroundColor(Color.TRANSPARENT);
+                imageGridView.mThumbnail.setImageAlpha(255);
+                imageGridView.mThumbnail.setBackgroundColor(Color.TRANSPARENT);
             }
 
             if (shouldRequestThumb) {
-                fetcher.fetch(id, imageView, colWidth, rotate);
+                fetcher.fetch(id, imageGridView.mThumbnail, colWidth, rotate);
             }
 
-            return imageView;
+            return imageGridView;
         }
     }
 }
