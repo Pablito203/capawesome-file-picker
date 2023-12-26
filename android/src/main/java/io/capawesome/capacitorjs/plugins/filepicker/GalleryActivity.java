@@ -1,7 +1,5 @@
 package io.capawesome.capacitorjs.plugins.filepicker;
 
-import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -21,11 +19,9 @@ import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
 
 import androidx.appcompat.app.ActionBar;
 
@@ -56,18 +52,6 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.grid);
-
-        int maximumFilesCount = 3;
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        dialogBuilder.setTitle(String.format("Limite de %d arquivos", maximumFilesCount));
-        dialogBuilder.setMessage(String.format("Você pode selecionar até %d arquivos", maximumFilesCount));
-        dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-        dialogBuilder.create();
-        dialogBuilder.show();
 
         setupHeader();
 
@@ -142,8 +126,19 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
 
         boolean isChecked = !isChecked(position);
 
-        if (isChecked && 3 == 1) {
-            isChecked = false;
+        int maximumFilesCount = 5;
+
+        if (isChecked && fileNames.size() >= maximumFilesCount) {
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+            dialogBuilder.setTitle(String.format("Limite de %d arquivos", maximumFilesCount));
+            dialogBuilder.setMessage(String.format("Você pode selecionar até %d arquivos", maximumFilesCount));
+            dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            dialogBuilder.create();
+            dialogBuilder.show();
         } else if (isChecked) {
             fileNames.put(name, rotation);
 
@@ -151,24 +146,21 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
                 //selectClicked();
 
             } else {
-                //maxImages--;;
-                ImageView thumbnail = view .findViewById (R .id .media_thumbnail );
-                RadioCheckView radioCheckView = view .findViewById (R .id .check_view );
+                //maxImages--;
+                ImageGridView imageGridView = (ImageGridView) view;
 
-                thumbnail.setImageAlpha(128);
-                thumbnail.setBackgroundColor(Color.BLACK);
-                radioCheckView.setChecked(true);
+                imageGridView.mThumbnail.setImageAlpha(128);
+                imageGridView.mThumbnail.setBackgroundColor(Color.BLACK);
+                imageGridView.mRadioCheckView.setChecked(true);
             }
         } else {
             fileNames.remove(name);
             //maxImages++;
+            ImageGridView imageGridView = (ImageGridView) view;
 
-            ImageView thumbnail = view .findViewById (R .id .media_thumbnail );
-            RadioCheckView radioCheckView = view .findViewById (R .id .check_view );
-
-            thumbnail.setImageAlpha(255);
-            thumbnail.setBackgroundColor(Color.TRANSPARENT);
-            radioCheckView.setChecked(false);
+            imageGridView.mThumbnail.setImageAlpha(255);
+            imageGridView.mThumbnail.setBackgroundColor(Color.TRANSPARENT);
+            imageGridView.mRadioCheckView.setChecked(false);
         }
 
         checkStatus.put(position, isChecked);
@@ -253,14 +245,25 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
         return checkStatus.get(position);
     }
 
-    private class SquareImageView extends androidx.appcompat.widget.AppCompatImageView {
-        public SquareImageView(Context context) {
+    private class ImageGridView extends FrameLayout {
+        ImageView mThumbnail;
+        RadioCheckView mRadioCheckView;
+
+        public ImageGridView(Context context) {
             super(context);
+            init(context);
         }
 
         @Override
         public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
             super.onMeasure(widthMeasureSpec, widthMeasureSpec);
+        }
+
+        private void init(Context context) {
+            LayoutInflater.from(context).inflate(R.layout.image_grid_view, this, true);
+
+            mThumbnail = (ImageView) findViewById(R.id.media_thumbnail);
+            mRadioCheckView = (RadioCheckView) findViewById(R.id.check_view);
         }
     }
 
@@ -286,40 +289,40 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
         public View getView(int position, View convertView, ViewGroup parent) {
 
             if (convertView == null) {
-                convertView = View .inflate (GalleryActivity.this , R .layout .image_grid_view , null );
+                ImageGridView temp = new ImageGridView(GalleryActivity.this);
+                temp.mThumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                convertView = temp;
             }
 
-            ImageView thumbnail = convertView .findViewById (R .id .media_thumbnail );
-            RadioCheckView radioCheckView = convertView .findViewById (R .id .check_view );
-            thumbnail .setScaleType(ImageView.ScaleType.CENTER_CROP);
-            thumbnail.setImageBitmap(null);
+            ImageGridView imageGridView = (ImageGridView) convertView;
+            imageGridView.mThumbnail.setImageBitmap(null);
 
             if (!imagecursor.moveToPosition(position)) {
-                return convertView;
+                return imageGridView;
             }
 
             if (image_column_index == -1) {
-                return convertView;
+                return imageGridView;
             }
 
             final int id = imagecursor.getInt(image_column_index);
             final int rotate = imagecursor.getInt(image_column_orientation);
 
             if (isChecked(position)) {
-                thumbnail.setImageAlpha(128);
-                thumbnail.setBackgroundColor(Color.BLACK);
-                radioCheckView.setChecked(true);
+                imageGridView.mThumbnail.setImageAlpha(128);
+                imageGridView.setBackgroundColor(Color.BLACK);
+                imageGridView.mRadioCheckView.setChecked(true);
             } else {
-                thumbnail.setImageAlpha(255);
-                thumbnail.setBackgroundColor(Color.TRANSPARENT);
-                radioCheckView.setChecked(false);
+                imageGridView.mThumbnail.setImageAlpha(255);
+                imageGridView.mThumbnail.setBackgroundColor(Color.TRANSPARENT);
+                imageGridView.mRadioCheckView.setChecked(false);
             }
 
             if (shouldRequestThumb) {
-                fetcher.fetch(id, thumbnail, colWidth, rotate);
+                fetcher.fetch(id, imageGridView.mThumbnail, colWidth, rotate);
             }
 
-            return convertView;
+            return imageGridView;
         }
     }
 }
