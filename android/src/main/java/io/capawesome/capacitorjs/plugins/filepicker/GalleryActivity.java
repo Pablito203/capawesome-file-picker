@@ -19,6 +19,7 @@ import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -37,7 +38,7 @@ import java.util.Map;
 
 public class GalleryActivity extends AppCompatActivity implements OnItemClickListener, LoaderManager.LoaderCallbacks<Cursor> {
     private ImageAdapter ia;
-    private Cursor imagecursor, actualimagecursor;
+    private Cursor imagecursor;
     private int image_column_index, image_column_orientation;
     private int colWidth;
     private static final int CURSORLOADER_THUMBS = 0;
@@ -47,19 +48,19 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
     private Map<String, Integer> fileNames = new HashMap<String, Integer>();
 
     private SparseBooleanArray checkStatus = new SparseBooleanArray();
+    private TextView selectedTextView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.grid);
 
-        setupHeader();
-
         Display display = getWindowManager().getDefaultDisplay();
         int width = display.getWidth();
 
         colWidth = width / 4;
 
+        TextView selectedTextView = (TextView) findViewById(R.id.numberSelected);
         GridView gridView = (GridView) findViewById(R.id.gridview);
         gridView.setOnItemClickListener(this);
         gridView.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -93,26 +94,6 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
 
         LoaderManager.enableDebugLogging(false);
         LoaderManager.getInstance(this).initLoader(CURSORLOADER_THUMBS, null, this);
-    }
-
-    private void setupHeader() {
-        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        View header = inflater.inflate(R.layout.actionbar, null);
-
-        // Show the custom action bar view and hide the normal Home icon and title.
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayOptions(
-                    ActionBar.DISPLAY_SHOW_CUSTOM,
-                    ActionBar.DISPLAY_SHOW_CUSTOM
-                            | ActionBar.DISPLAY_SHOW_HOME
-                            | ActionBar.DISPLAY_SHOW_TITLE
-            );
-            actionBar.setCustomView(header, new ActionBar.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT
-            ));
-        }
     }
 
     @Override
@@ -163,6 +144,7 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
         }
 
         checkStatus.put(position, isChecked);
+        selectedTextView.setText("(" + fileNames.size() + ")");
         //updateAcceptButton();
     }
 
