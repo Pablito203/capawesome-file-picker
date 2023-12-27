@@ -56,24 +56,24 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/bottom_toolbar"
-        android:layout_below="@id/toolbar"
-        android:visibility="gone" />
+        android:layout_below="@id/toolbar">
 
-    <GridView
-        android:id="@+id/gridview"
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:columnWidth="0dip"
-        android:fadingEdgeLength="10dip"
-        android:fastScrollEnabled="true"
-        android:gravity="center"
-        android:horizontalSpacing="3dip"
-        android:numColumns="3"
-        android:requiresFadingEdge="vertical"
-        android:scrollingCache="true"
-        android:stretchMode="columnWidth"
-        android:verticalSpacing="3dip" />
+        <GridView
+            android:id="@+id/gridview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:columnWidth="0dip"
+            android:fadingEdgeLength="10dip"
+            android:fastScrollEnabled="true"
+            android:gravity="center"
+            android:horizontalSpacing="3dip"
+            android:numColumns="3"
+            android:requiresFadingEdge="vertical"
+            android:scrollingCache="true"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="3dip" />
+    </FrameLayout>
 
     <FrameLayout
         android:id="@+id/empty_view"
