@@ -51,29 +51,23 @@
             android:textSize="16sp" />
     </FrameLayout>
 
-    <FrameLayout
-        android:id="@+id/container"
+    <GridView
+        android:id="@+id/gridview"
+        android:layout_above="@id/bottom_toolbar"
+        android:layout_below="@id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/bottom_toolbar"
-        android:layout_below="@id/toolbar">
-
-        <GridView
-            android:id="@+id/gridview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:columnWidth="0dip"
-            android:fadingEdgeLength="10dip"
-            android:fastScrollEnabled="true"
-            android:gravity="center"
-            android:horizontalSpacing="3dip"
-            android:numColumns="3"
-            android:requiresFadingEdge="vertical"
-            android:scrollingCache="true"
-            android:stretchMode="columnWidth"
-            android:verticalSpacing="3dip" />
-    </FrameLayout>
+        android:layout_weight="1"
+        android:columnWidth="0dip"
+        android:fadingEdgeLength="10dip"
+        android:fastScrollEnabled="true"
+        android:gravity="center"
+        android:horizontalSpacing="3dip"
+        android:numColumns="3"
+        android:requiresFadingEdge="vertical"
+        android:scrollingCache="true"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="3dip" />
 
     <FrameLayout
         android:id="@+id/empty_view"
