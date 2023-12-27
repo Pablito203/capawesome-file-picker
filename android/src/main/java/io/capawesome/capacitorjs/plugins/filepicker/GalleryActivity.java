@@ -139,6 +139,7 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
             });
             dialogBuilder.create();
             dialogBuilder.show();
+            return;
         } else if (isChecked) {
             fileNames.put(name, rotation);
 
@@ -146,7 +147,6 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
                 //selectClicked();
 
             } else {
-                //maxImages--;
                 ImageGridView imageGridView = (ImageGridView) view;
 
                 imageGridView.mThumbnail.setImageAlpha(128);
@@ -155,7 +155,6 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
             }
         } else {
             fileNames.remove(name);
-            //maxImages++;
             ImageGridView imageGridView = (ImageGridView) view;
 
             imageGridView.mThumbnail.setImageAlpha(255);
