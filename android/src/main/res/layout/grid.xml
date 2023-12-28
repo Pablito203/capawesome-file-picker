@@ -3,14 +3,13 @@
     android:id="@+id/gridLayout"
     android:layout_height="fill_parent"
     android:layout_width="fill_parent"
-    android:orientation="vertical"
-    android:background="@android:color/white">
+    android:orientation="vertical" >
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/darker_gray"
+        android:background="?colorPrimary"
         android:elevation="4dp">
 
         <TextView
