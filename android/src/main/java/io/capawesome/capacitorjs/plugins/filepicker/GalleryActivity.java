@@ -26,6 +26,7 @@ import androidx.annotation.Nullable;
 
 import androidx.appcompat.app.ActionBar;
 
+import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.CursorLoader;
@@ -59,6 +60,9 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
         int width = display.getWidth();
 
         colWidth = width / 4;
+
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
 
         selectedTextView = (TextView) findViewById(R.id.numberSelected);
         GridView gridView = (GridView) findViewById(R.id.gridview);
