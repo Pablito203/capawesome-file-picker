@@ -53,6 +53,7 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        getSupportActionBar().hide();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.grid);
 
@@ -60,12 +61,6 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
         int width = display.getWidth();
 
         colWidth = width / 4;
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayHomeAsUpEnabled(true);
 
         selectedTextView = (TextView) findViewById(R.id.numberSelected);
         GridView gridView = (GridView) findViewById(R.id.gridview);
