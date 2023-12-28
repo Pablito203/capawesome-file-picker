@@ -60,7 +60,7 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
 
         colWidth = width / 4;
 
-        TextView selectedTextView = (TextView) findViewById(R.id.numberSelected);
+        selectedTextView = (TextView) findViewById(R.id.numberSelected);
         GridView gridView = (GridView) findViewById(R.id.gridview);
         gridView.setOnItemClickListener(this);
         gridView.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -144,7 +144,9 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
         }
 
         checkStatus.put(position, isChecked);
-        selectedTextView.setText("(" + fileNames.size() + ")");
+
+        TextView selectedTextView = (TextView) findViewById(R.id.numberSelected);
+        selectedTextView.setText(String.format("(%d)", fileNames.size()));
         //updateAcceptButton();
     }
 
