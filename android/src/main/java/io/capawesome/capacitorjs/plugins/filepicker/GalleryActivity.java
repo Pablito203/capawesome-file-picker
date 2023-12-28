@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.SparseBooleanArray;
@@ -53,7 +54,7 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        getSupportActionBar().hide();
+        setupHeader();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.grid);
 
@@ -97,6 +98,26 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
         LoaderManager.enableDebugLogging(false);
         LoaderManager.getInstance(this).initLoader(CURSORLOADER_THUMBS, null, this);
     }
+
+    private void setupHeader() {
+        View header = findViewById(R.id.toolbar);
+
+        // Show the custom action bar view and hide the normal Home icon and title.
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayOptions(
+                    ActionBar.DISPLAY_SHOW_CUSTOM,
+                    ActionBar.DISPLAY_SHOW_CUSTOM
+                            | ActionBar.DISPLAY_SHOW_HOME
+                            | ActionBar.DISPLAY_SHOW_TITLE
+            );
+            actionBar.setCustomView(header, new ActionBar.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+            ));
+        }
+    }
+
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
