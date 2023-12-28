@@ -61,8 +61,11 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
 
         colWidth = width / 4;
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(myToolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         selectedTextView = (TextView) findViewById(R.id.numberSelected);
         GridView gridView = (GridView) findViewById(R.id.gridview);
