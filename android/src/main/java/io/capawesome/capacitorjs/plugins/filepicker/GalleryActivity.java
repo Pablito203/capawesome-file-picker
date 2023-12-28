@@ -57,8 +57,7 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.grid);
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(myToolbar);
+        setupHeader();
 
         Display display = getWindowManager().getDefaultDisplay();
         int width = display.getWidth();
