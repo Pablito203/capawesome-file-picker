@@ -10,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:elevation="4dp">
+        android:elevation="4dp"
+        android:background="@android:color/darker_gray">
 
         <TextView
             android:id="@+id/button_preview"
@@ -20,7 +21,8 @@
             android:foreground="?selectableItemBackground"
             android:padding="16dp"
             android:text="Prévia"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textColor="@android:color/black"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -35,7 +37,8 @@
                 android:foreground="?selectableItemBackground"
                 android:text="Avançar"
                 android:paddingEnd="5dp"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textColor="@android:color/black"/>
 
             <TextView
                 android:id="@+id/numberSelected"
@@ -43,7 +46,8 @@
                 android:layout_height="wrap_content"
                 android:foreground="?selectableItemBackground"
                 android:text="(0)"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textColor="@android:color/black"/>
         </LinearLayout>
     </FrameLayout>
 
