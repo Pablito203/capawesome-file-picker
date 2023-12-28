@@ -54,9 +54,11 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        setupHeader();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.grid);
+
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
 
         Display display = getWindowManager().getDefaultDisplay();
         int width = display.getWidth();
@@ -100,7 +102,8 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
     }
 
     private void setupHeader() {
-        View header = findViewById(R.id.toolbar);
+        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        View header = inflater.inflate(R.layout.header, null);
 
         // Show the custom action bar view and hide the normal Home icon and title.
         ActionBar actionBar = getSupportActionBar();
