@@ -28,8 +28,6 @@ import android.view.Window;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import androidx.appcompat.app.ActionBar;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.CursorLoader;
@@ -154,17 +152,17 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
             } else {
                 ImageGridView imageGridView = (ImageGridView) view;
 
-                imageGridView.mThumbnail.setImageAlpha(128);
-                imageGridView.mThumbnail.setBackgroundColor(Color.BLACK);
-                imageGridView.mRadioCheckView.setChecked(true);
+                imageGridView.thumbnail.setImageAlpha(128);
+                imageGridView.thumbnail.setBackgroundColor(Color.BLACK);
+                imageGridView.radioCheckView.setChecked(true);
             }
         } else {
             fileNames.remove(name);
             ImageGridView imageGridView = (ImageGridView) view;
 
-            imageGridView.mThumbnail.setImageAlpha(255);
-            imageGridView.mThumbnail.setBackgroundColor(Color.TRANSPARENT);
-            imageGridView.mRadioCheckView.setChecked(false);
+            imageGridView.thumbnail.setImageAlpha(255);
+            imageGridView.thumbnail.setBackgroundColor(Color.TRANSPARENT);
+            imageGridView.radioCheckView.setChecked(false);
         }
 
         checkStatus.put(position, isChecked);
@@ -281,8 +279,8 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
     }
 
     private class ImageGridView extends FrameLayout {
-        ImageView mThumbnail;
-        RadioCheckView mRadioCheckView;
+        ImageView thumbnail;
+        RadioCheckView radioCheckView;
 
         public ImageGridView(Context context) {
             super(context);
@@ -297,8 +295,8 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
         private void init(Context context) {
             LayoutInflater.from(context).inflate(R.layout.image_grid_view, this, true);
 
-            mThumbnail = (ImageView) findViewById(R.id.media_thumbnail);
-            mRadioCheckView = (RadioCheckView) findViewById(R.id.check_view);
+            thumbnail = (ImageView) findViewById(R.id.media_thumbnail);
+            radioCheckView = (RadioCheckView) findViewById(R.id.check_view);
         }
     }
 
@@ -325,12 +323,12 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
 
             if (convertView == null) {
                 ImageGridView temp = new ImageGridView(GalleryActivity.this);
-                temp.mThumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                temp.thumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 convertView = temp;
             }
 
             ImageGridView imageGridView = (ImageGridView) convertView;
-            imageGridView.mThumbnail.setImageBitmap(null);
+            imageGridView.thumbnail.setImageBitmap(null);
 
             if (!imagecursor.moveToPosition(position)) {
                 return imageGridView;
@@ -344,17 +342,17 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
             final int rotate = imagecursor.getInt(image_column_orientation);
 
             if (isChecked(position)) {
-                imageGridView.mThumbnail.setImageAlpha(128);
+                imageGridView.thumbnail.setImageAlpha(128);
                 imageGridView.setBackgroundColor(Color.BLACK);
-                imageGridView.mRadioCheckView.setChecked(true);
+                imageGridView.radioCheckView.setChecked(true);
             } else {
-                imageGridView.mThumbnail.setImageAlpha(255);
-                imageGridView.mThumbnail.setBackgroundColor(Color.TRANSPARENT);
-                imageGridView.mRadioCheckView.setChecked(false);
+                imageGridView.thumbnail.setImageAlpha(255);
+                imageGridView.thumbnail.setBackgroundColor(Color.TRANSPARENT);
+                imageGridView.radioCheckView.setChecked(false);
             }
 
             if (shouldRequestThumb) {
-                fetcher.fetch(id, imageGridView.mThumbnail, colWidth, rotate);
+                fetcher.fetch(id, imageGridView.thumbnail, colWidth, rotate);
             }
 
             return imageGridView;

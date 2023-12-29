@@ -12,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 public class PreviewActivity extends AppCompatActivity implements View.OnClickListener {
 
     private TextView buttonVoltar;
+    private RadioCheckView radioCheckView;
+    private boolean checked = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -22,6 +24,9 @@ public class PreviewActivity extends AppCompatActivity implements View.OnClickLi
 
         buttonVoltar = findViewById(R.id.button_back);
         buttonVoltar.setOnClickListener(this);
+
+        radioCheckView = findViewById(R.id.check_view_preview);
+        radioCheckView.setOnClickListener(this);
     }
 
     private void setupHeader() {
@@ -36,6 +41,9 @@ public class PreviewActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
         if (v.getId() == R.id.button_back) {
             finish();
+        } else if (v.getId() == R.id.check_view_preview) {
+            checked = !checked;
+            radioCheckView.setChecked(checked);
         }
     }
 }

@@ -19,11 +19,6 @@ public class RadioCheckView extends AppCompatImageView {
 
     public RadioCheckView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
-    }
-
-    private void init() {
-        setChecked(false);
     }
 
     public void setChecked(boolean enable) {
