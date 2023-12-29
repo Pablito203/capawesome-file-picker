@@ -255,7 +255,7 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
     public void onClick(View v) {
         if (v.getId() == R.id.button_preview) {
             Intent intent = new Intent(this, PreviewActivity.class);
-            startActivityForResult(intent, 3);
+            startActivity(intent);
         } else if (v.getId() == R.id.button_apply) {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
             dialogBuilder.setTitle("Botão avançar");
