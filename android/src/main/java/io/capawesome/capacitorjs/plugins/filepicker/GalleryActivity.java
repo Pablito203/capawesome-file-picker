@@ -21,6 +21,7 @@ import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.view.Window;
 
@@ -56,6 +57,7 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
     private SparseBooleanArray checkStatus = new SparseBooleanArray();
     private TextView selectedTextView;
     private TextView buttonPreview;
+    private LinearLayout buttonApply;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,6 +77,8 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
         selectedTextView = (TextView) findViewById(R.id.numberSelected);
         buttonPreview = (TextView) findViewById(R.id.button_preview);
         buttonPreview.setOnClickListener(this);
+        buttonApply = (LinearLayout) findViewById(R.id.button_apply);
+        buttonApply.setOnClickListener(this);
 
 
         GridView gridView = (GridView) findViewById(R.id.gridview);
@@ -271,6 +275,17 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
             dialogBuilder.setTitle("Botão preview");
             dialogBuilder.setMessage("Botão preview pressionado");
+            dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            dialogBuilder.create();
+            dialogBuilder.show();
+        } else if (v.getId() == R.id.button_apply) {
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+            dialogBuilder.setTitle("Botão avançar");
+            dialogBuilder.setMessage("Botão avançar pressionado");
             dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.cancel();
