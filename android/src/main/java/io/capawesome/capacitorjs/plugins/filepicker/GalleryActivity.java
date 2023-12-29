@@ -40,7 +40,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class GalleryActivity extends AppCompatActivity implements OnItemClickListener, LoaderManager.LoaderCallbacks<Cursor> {
+public class GalleryActivity extends AppCompatActivity implements OnItemClickListener,
+                                                                  LoaderManager.LoaderCallbacks<Cursor>,
+                                                                  View.OnClickListener {
     private ImageAdapter ia;
     private Cursor imagecursor;
     private int image_column_index, image_column_orientation;
@@ -53,14 +55,13 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
 
     private SparseBooleanArray checkStatus = new SparseBooleanArray();
     private TextView selectedTextView;
+    private TextView buttonPreview;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.grid);
-
         getSupportActionBar().hide();
-
         Window window = this.getWindow();
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -72,6 +73,10 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
         colWidth = width / 4;
 
         selectedTextView = (TextView) findViewById(R.id.numberSelected);
+        buttonPreview = (TextView) findViewById(R.id.button_preview);
+        buttonPreview.setOnClickListener(this);
+
+
         GridView gridView = (GridView) findViewById(R.id.gridview);
         gridView.setOnItemClickListener(this);
         gridView.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -258,6 +263,22 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
 
     public boolean isChecked(int position) {
         return checkStatus.get(position);
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.button_preview) {
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+            dialogBuilder.setTitle("Botão preview");
+            dialogBuilder.setMessage("Botão preview pressionado");
+            dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            dialogBuilder.create();
+            dialogBuilder.show();
+        }
     }
 
     private class ImageGridView extends FrameLayout {
