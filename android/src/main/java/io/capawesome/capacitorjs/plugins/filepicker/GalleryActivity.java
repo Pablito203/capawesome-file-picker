@@ -3,9 +3,9 @@ package io.capawesome.capacitorjs.plugins.filepicker;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.SparseBooleanArray;
@@ -30,7 +30,6 @@ import androidx.annotation.Nullable;
 
 import androidx.appcompat.app.ActionBar;
 
-import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.CursorLoader;
@@ -62,24 +61,20 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.grid);
-        getSupportActionBar().hide();
-        Window window = this.getWindow();
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(Color.BLACK);
-        
+
+        setContentView(R.layout.grid_layout);
+        setupHeader();
+
         Display display = getWindowManager().getDefaultDisplay();
         int width = display.getWidth();
 
         colWidth = width / 4;
 
-        selectedTextView = (TextView) findViewById(R.id.numberSelected);
+        selectedTextView = (TextView) findViewById(R.id.count_selected);
         buttonPreview = (TextView) findViewById(R.id.button_preview);
         buttonPreview.setOnClickListener(this);
         buttonApply = (LinearLayout) findViewById(R.id.button_apply);
         buttonApply.setOnClickListener(this);
-
 
         GridView gridView = (GridView) findViewById(R.id.gridview);
         gridView.setOnItemClickListener(this);
@@ -117,23 +112,11 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
     }
 
     private void setupHeader() {
-        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        View header = inflater.inflate(R.layout.header, null);
-
-        // Show the custom action bar view and hide the normal Home icon and title.
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayOptions(
-                    ActionBar.DISPLAY_SHOW_CUSTOM,
-                    ActionBar.DISPLAY_SHOW_CUSTOM
-                            | ActionBar.DISPLAY_SHOW_HOME
-                            | ActionBar.DISPLAY_SHOW_TITLE
-            );
-            actionBar.setCustomView(header, new ActionBar.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT
-            ));
-        }
+        getSupportActionBar().hide();
+        Window window = this.getWindow();
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(Color.BLACK);
     }
 
 
@@ -186,7 +169,6 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
 
         checkStatus.put(position, isChecked);
 
-        TextView selectedTextView = (TextView) findViewById(R.id.numberSelected);
         selectedTextView.setText(String.format("(%d)", fileNames.size()));
         //updateAcceptButton();
     }
@@ -272,16 +254,8 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.button_preview) {
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-            dialogBuilder.setTitle("Botão preview");
-            dialogBuilder.setMessage("Botão preview pressionado");
-            dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
-            });
-            dialogBuilder.create();
-            dialogBuilder.show();
+            Intent intent = new Intent(this, PreviewActivity.class);
+            startActivityForResult(intent, 3);
         } else if (v.getId() == R.id.button_apply) {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
             dialogBuilder.setTitle("Botão avançar");
