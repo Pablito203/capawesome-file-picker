@@ -255,7 +255,7 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
     public void onClick(View v) {
         if (v.getId() == R.id.button_preview) {
             Intent intent = new Intent(this, PreviewActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, 23);
         } else if (v.getId() == R.id.button_apply) {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
             dialogBuilder.setTitle("Botão avançar");
@@ -267,6 +267,27 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
             });
             dialogBuilder.create();
             dialogBuilder.show();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        dialogBuilder.setTitle("Botão avançar");
+        dialogBuilder.setMessage("Botão avançar pressionado");
+        dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        dialogBuilder.create();
+        dialogBuilder.show();
+
+        if (resultCode != RESULT_OK)
+            return;
+
+        if (requestCode == 23) {
         }
     }
 

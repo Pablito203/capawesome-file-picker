@@ -2,12 +2,16 @@ package io.capawesome.capacitorjs.plugins.filepicker;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class PreviewActivity extends AppCompatActivity {
+public class PreviewActivity extends AppCompatActivity implements View.OnClickListener {
+
+    private TextView buttonVoltar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -15,6 +19,9 @@ public class PreviewActivity extends AppCompatActivity {
 
         setContentView(R.layout.preview_layout);
         setupHeader();
+
+        buttonVoltar = findViewById(R.id.button_back);
+        buttonVoltar.setOnClickListener(this);
     }
 
     private void setupHeader() {
@@ -23,5 +30,12 @@ public class PreviewActivity extends AppCompatActivity {
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.setStatusBarColor(Color.BLACK);
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.button_back) {
+            finish();
+        }
     }
 }
