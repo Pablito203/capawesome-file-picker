@@ -9,7 +9,8 @@
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/black"/>
+        android:background="@android:color/black"
+        android:layout_below="@+id/top_toolbar_preview"/>
 
     <FrameLayout
         android:id="@+id/bottom_toolbar_preview"
@@ -17,8 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="#141517"
-        android:elevation="4dp"
-        tools:targetApi="lollipop">
+        android:elevation="4dp">
 
         <TextView
             android:id="@+id/button_back"
@@ -74,7 +74,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="true"
+        android:background="#141517"
+        android:elevation="4dp"
+        android:padding="10dp">
 
         <io.capawesome.capacitorjs.plugins.filepicker.RadioCheckView
             android:id="@+id/check_view_preview"
