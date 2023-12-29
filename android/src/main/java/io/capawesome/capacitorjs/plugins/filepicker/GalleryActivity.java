@@ -57,8 +57,8 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.grid);
 
-        setupHeader();
-
+        getSupportActionBar().hide();
+        
         Display display = getWindowManager().getDefaultDisplay();
         int width = display.getWidth();
 
