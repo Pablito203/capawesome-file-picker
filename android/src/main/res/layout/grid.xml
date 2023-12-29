@@ -9,7 +9,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/darker_gray"
+        android:background="#141517"
         android:elevation="4dp">
 
         <TextView
@@ -20,8 +20,9 @@
             android:drawableRight="@drawable/ic_arrow_drop_down_white_24dp"
             android:foreground="?selectableItemBackground"
             android:gravity="center"
-            android:textSize="20sp"
-            android:text="all"/>
+            android:textSize="16sp"
+            android:text="All"
+            android:textColor="@android:color/white"/>
     </androidx.appcompat.widget.Toolbar>
 
     <FrameLayout
@@ -30,7 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:elevation="4dp"
-        android:background="@android:color/darker_gray">
+        android:background="#141517">
 
         <TextView
             android:id="@+id/button_preview"
@@ -41,7 +42,7 @@
             android:padding="16dp"
             android:text="Prévia"
             android:textSize="16sp"
-            android:textColor="@android:color/black"/>
+            android:textColor="@android:color/white"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -57,7 +58,7 @@
                 android:text="Avançar"
                 android:paddingEnd="5dp"
                 android:textSize="16sp"
-                android:textColor="@android:color/black"/>
+                android:textColor="@android:color/white"/>
 
             <TextView
                 android:id="@+id/numberSelected"
@@ -66,7 +67,7 @@
                 android:foreground="?selectableItemBackground"
                 android:text="(0)"
                 android:textSize="16sp"
-                android:textColor="@android:color/black"/>
+                android:textColor="@android:color/white"/>
         </LinearLayout>
     </FrameLayout>
 
