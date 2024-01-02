@@ -2,21 +2,28 @@ package io.capawesome.capacitorjs.plugins.filepicker;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PreviewActivity extends FragmentActivity implements View.OnClickListener {
 
     private TextView buttonVoltar;
-    private RadioCheckView radioCheckView;
-    private boolean checked = true;
+    private final ImageFetcher fetcher = new ImageFetcher();
+    private List<Integer> lstImageID = new ArrayList();
+    private List<Integer> lstImageRotate = new ArrayList();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -27,9 +34,6 @@ public class PreviewActivity extends FragmentActivity implements View.OnClickLis
 
         buttonVoltar = findViewById(R.id.button_back);
         buttonVoltar.setOnClickListener(this);
-
-        radioCheckView = findViewById(R.id.check_view_preview);
-        radioCheckView.setOnClickListener(this);
     }
 
     private void setupHeader() {
@@ -43,27 +47,55 @@ public class PreviewActivity extends FragmentActivity implements View.OnClickLis
     public void onClick(View v) {
         if (v.getId() == R.id.button_back) {
             finish();
-        } else if (v.getId() == R.id.check_view_preview) {
-            checked = !checked;
-            radioCheckView.setChecked(checked);
         }
     }
 
     private class ViewPageAdapter extends FragmentStateAdapter {
 
-        public ViewPageAdapter(@NonNull Fragment fragment) {
-            super(fragment);
+        public ViewPageAdapter(FragmentActivity fragmentActivity) {
+            super(fragmentActivity);
         }
 
         @NonNull
         @Override
         public Fragment createFragment(int position) {
-            return null;
+            return new ViewPageFragment();
         }
 
         @Override
         public int getItemCount() {
             return 0;
+        }
+    }
+
+    public class ViewPageFragment extends Fragment implements View.OnClickListener {
+        private boolean checked = true;
+        private RadioCheckView radioCheckView;
+        private AppCompatImageView thumbnail;
+        private int imageID = 0;
+        private int imageRotate = 0;
+
+        public ViewPageFragment(int imageID, int imageRotate) {
+            this.imageID = imageID;
+            this.imageRotate = imageRotate;
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            ViewGroup imagePreview = (ViewGroup) inflater.inflate(R.layout.image_preview, container, false);
+            radioCheckView = imagePreview.findViewById(R.id.check_view_preview);
+            radioCheckView.setOnClickListener(this);
+            thumbnail = imagePreview.findViewById(R.id.media_thumbnail_preview);
+            fetcher.fetch(imageID, thumbnail, 0, imageRotate);
+            return imagePreview;
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (v.getId() == R.id.check_view_preview) {
+                checked = !checked;
+                radioCheckView.setChecked(checked);
+            }
         }
     }
 }
