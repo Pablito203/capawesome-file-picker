@@ -22,12 +22,15 @@ public class PreviewActivity extends FragmentActivity implements View.OnClickLis
 
     private TextView buttonVoltar;
     private final ImageFetcher fetcher = new ImageFetcher();
-    private List<Integer> lstImageID = new ArrayList();
-    private List<Integer> lstImageRotate = new ArrayList();
+    private ArrayList<Integer> lstImageIDSelected = new ArrayList();
+    private ArrayList<Integer> lstImageRotateSelected = new ArrayList();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        lstImageIDSelected = getIntent().getIntegerArrayListExtra("lstImageIDSelected");
+        lstImageRotateSelected = getIntent().getIntegerArrayListExtra("lstImageRotateSelected");
 
         setContentView(R.layout.preview_layout);
         setupHeader();
@@ -59,7 +62,7 @@ public class PreviewActivity extends FragmentActivity implements View.OnClickLis
         @NonNull
         @Override
         public Fragment createFragment(int position) {
-            return new ViewPageFragment();
+            return new ViewPageFragment(lstImageIDSelected.get(position), lstImageRotateSelected.get(position));
         }
 
         @Override

@@ -35,7 +35,6 @@ import androidx.loader.content.Loader;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -45,8 +44,8 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
     private ImageAdapter ia;
     private Cursor imagecursor;
     private int image_column_index, image_column_orientation;
-    private List<Integer> lstImageIDSelected = new ArrayList();
-    private List<Integer> lstImageRotateSelected = new ArrayList();
+    private ArrayList<Integer> lstImageIDSelected = new ArrayList();
+    private ArrayList<Integer> lstImageRotateSelected = new ArrayList();
     private int colWidth;
     private static final int CURSORLOADER_THUMBS = 0;
     private final ImageFetcher fetcher = new ImageFetcher();
@@ -137,8 +136,8 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
 
         if (isChecked && fileNames.size() >= maximumFilesCount) {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-            dialogBuilder.setTitle(String.format("Limite de %d arquivos", idCursor));
-            dialogBuilder.setMessage(String.format("Você pode selecionar até %d arquivos", id));
+            dialogBuilder.setTitle(String.format("Limite de %d arquivos", maximumFilesCount));
+            dialogBuilder.setMessage(String.format("Você pode selecionar até %d arquivos", maximumFilesCount));
             dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.cancel();
@@ -149,6 +148,8 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
             return;
         } else if (isChecked) {
             fileNames.put(name, rotation);
+            lstImageIDSelected.add(idCursor);
+            lstImageRotateSelected.add(rotation);
 
             if (3 == 1) {
                 //selectClicked();
@@ -162,6 +163,9 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
             }
         } else {
             fileNames.remove(name);
+            lstImageIDSelected.remove(idCursor);
+            lstImageRotateSelected.remove(rotation);
+
             ImageGridView imageGridView = (ImageGridView) view;
 
             imageGridView.thumbnail.setImageAlpha(255);
@@ -255,7 +259,8 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
     public void onClick(View v) {
         if (v.getId() == R.id.button_preview) {
             Intent intent = new Intent(this, PreviewActivity.class);
-            intent.putExtra()
+            intent.putIntegerArrayListExtra("lstImageIDSelected", lstImageIDSelected);
+            intent.putIntegerArrayListExtra("lstImageRotateSelected", lstImageRotateSelected);
             startActivityForResult(intent, 23);
         } else if (v.getId() == R.id.button_apply) {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
