@@ -14,6 +14,7 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,7 @@ public class PreviewActivity extends FragmentActivity implements View.OnClickLis
     private final ImageFetcher fetcher = new ImageFetcher();
     private ArrayList<Integer> lstImageIDSelected = new ArrayList();
     private ArrayList<Integer> lstImageRotateSelected = new ArrayList();
+    private ViewPager2 viewPager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -34,6 +36,10 @@ public class PreviewActivity extends FragmentActivity implements View.OnClickLis
 
         setContentView(R.layout.preview_layout);
         setupHeader();
+
+        viewPager = findViewById(R.id.pager);
+        ViewPageAdapter pagerAdapter = new ViewPageAdapter(this);
+        viewPager.setAdapter(pagerAdapter);
 
         buttonVoltar = findViewById(R.id.button_back);
         buttonVoltar.setOnClickListener(this);
