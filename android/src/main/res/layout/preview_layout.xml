@@ -10,7 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/black"
-        android:layout_below="@+id/top_toolbar_preview"
         android:layout_above="@+id/bottom_toolbar_preview"/>
 
     <FrameLayout

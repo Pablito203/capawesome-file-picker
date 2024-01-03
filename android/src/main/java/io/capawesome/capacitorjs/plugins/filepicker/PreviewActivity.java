@@ -17,7 +17,6 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class PreviewActivity extends FragmentActivity implements View.OnClickListener {
 
