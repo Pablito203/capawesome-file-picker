@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/content"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/media_thumbnail_preview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/media_thumbnail_preview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
         <io.capawesome.capacitorjs.plugins.filepicker.RadioCheckView
             android:id="@+id/check_view_preview"
@@ -16,4 +13,4 @@
             android:layout_height="30dp"
             android:layout_gravity="end"/>
 
-</ScrollView>
+</merge>

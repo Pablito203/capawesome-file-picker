@@ -10,15 +10,16 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import java.util.ArrayList;
 
-public class PreviewActivity extends FragmentActivity implements View.OnClickListener {
+public class PreviewActivity extends AppCompatActivity implements View.OnClickListener {
 
     private TextView buttonVoltar;
     private final ImageFetcher fetcher = new ImageFetcher();
@@ -36,8 +37,14 @@ public class PreviewActivity extends FragmentActivity implements View.OnClickLis
         setContentView(R.layout.preview_layout);
         setupHeader();
 
+        ArrayList<ViewPagerItem> viewPagerItemArrayList = new ArrayList<>();
+
+        for (int i = 0; i < lstImageIDSelected.size(); i++) {
+            ViewPagerItem viewPagerItem = new ViewPagerItem(lstImageIDSelected.get(i), lstImageRotateSelected.get(i));
+            viewPagerItemArrayList.add(viewPagerItem);
+        }
         viewPager = findViewById(R.id.pager);
-        ViewPageAdapter pagerAdapter = new ViewPageAdapter(this);
+        ViewPageAdapter pagerAdapter = new ViewPageAdapter(viewPagerItemArrayList);
         viewPager.setAdapter(pagerAdapter);
 
         buttonVoltar = findViewById(R.id.button_back);
@@ -58,52 +65,49 @@ public class PreviewActivity extends FragmentActivity implements View.OnClickLis
         }
     }
 
-    private class ViewPageAdapter extends FragmentStateAdapter {
+    private class ViewPageAdapter extends RecyclerView.Adapter<ViewPageAdapter.ViewHolder> {
+        ArrayList<ViewPagerItem> viewPagerItemArrayList;
 
-        public ViewPageAdapter(FragmentActivity fragmentActivity) {
-            super(fragmentActivity);
+        public ViewPageAdapter(ArrayList<ViewPagerItem> viewPagerItemArrayList) {
+            this.viewPagerItemArrayList = viewPagerItemArrayList;
         }
-
         @NonNull
         @Override
-        public Fragment createFragment(int position) {
-            return new ViewPageFragment(lstImageIDSelected.get(position), lstImageRotateSelected.get(position));
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.image_preview, parent, false);
+            return new ViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+            ViewPagerItem viewPagerItem = viewPagerItemArrayList.get(position);
         }
 
         @Override
         public int getItemCount() {
-            return 0;
+            return viewPagerItemArrayList.size();
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            private RadioCheckView radioCheckView;
+            private AppCompatImageView thumbnail;
+            public ViewHolder(@NonNull View itemView) {
+                super(itemView);
+
+                radioCheckView = itemView.findViewById(R.id.check_view_preview);
+                thumbnail = itemView.findViewById(R.id.media_thumbnail_preview);
+            }
         }
     }
 
-    public class ViewPageFragment extends Fragment implements View.OnClickListener {
+    public class ViewPagerItem {
         private boolean checked = true;
-        private RadioCheckView radioCheckView;
-        private AppCompatImageView thumbnail;
         private int imageID = 0;
         private int imageRotate = 0;
 
-        public ViewPageFragment(int imageID, int imageRotate) {
+        public ViewPagerItem(int imageID, int imageRotate) {
             this.imageID = imageID;
             this.imageRotate = imageRotate;
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            ViewGroup imagePreview = (ViewGroup) inflater.inflate(R.layout.image_preview, container, false);
-            radioCheckView = imagePreview.findViewById(R.id.check_view_preview);
-            radioCheckView.setOnClickListener(this);
-            thumbnail = imagePreview.findViewById(R.id.media_thumbnail_preview);
-            fetcher.fetch(imageID, thumbnail, 0, imageRotate);
-            return imagePreview;
-        }
-
-        @Override
-        public void onClick(View v) {
-            if (v.getId() == R.id.check_view_preview) {
-                checked = !checked;
-                radioCheckView.setChecked(checked);
-            }
         }
     }
 }
