@@ -52,6 +52,7 @@ public class PreviewActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void setupHeader() {
+        getSupportActionBar().hide();
         Window window = this.getWindow();
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -81,6 +82,10 @@ public class PreviewActivity extends AppCompatActivity implements View.OnClickLi
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             ViewPagerItem viewPagerItem = viewPagerItemArrayList.get(position);
+
+            holder.imageID = viewPagerItem.imageID;
+            holder.imageRotate = viewPagerItem.imageRotate;
+            holder.checked = viewPagerItem.checked;
         }
 
         @Override
@@ -88,14 +93,27 @@ public class PreviewActivity extends AppCompatActivity implements View.OnClickLi
             return viewPagerItemArrayList.size();
         }
 
-        public class ViewHolder extends RecyclerView.ViewHolder {
+        public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
             private RadioCheckView radioCheckView;
             private AppCompatImageView thumbnail;
+            private boolean checked = true;
+            private int imageID = 0;
+            private int imageRotate = 0;
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
 
                 radioCheckView = itemView.findViewById(R.id.check_view_preview);
+                radioCheckView.setOnClickListener(this);
                 thumbnail = itemView.findViewById(R.id.media_thumbnail_preview);
+                fetcher.fetch(imageID, thumbnail, 0, imageRotate);
+            }
+
+            @Override
+            public void onClick(View v) {
+                if (v.getId() == R.id.check_view_preview) {
+                    checked = !checked;
+                    this.radioCheckView.setChecked(checked);
+                }
             }
         }
     }
