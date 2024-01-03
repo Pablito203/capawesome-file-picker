@@ -163,8 +163,9 @@ public class GalleryActivity extends AppCompatActivity implements OnItemClickLis
             }
         } else {
             fileNames.remove(name);
-            lstImageIDSelected.remove(idCursor);
-            lstImageRotateSelected.remove(rotation);
+            int index = lstImageIDSelected.indexOf(idCursor);
+            lstImageIDSelected.remove(index);
+            lstImageRotateSelected.remove(index);
 
             ImageGridView imageGridView = (ImageGridView) view;
 
