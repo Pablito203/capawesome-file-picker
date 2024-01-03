@@ -3,10 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/media_thumbnail_preview"
+
+    <FrameLayout
+        android:id="@+id/top_toolbar_preview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content"
+        android:background="#141517"
+        android:elevation="4dp"
+        android:padding="10dp">
 
         <io.capawesome.capacitorjs.plugins.filepicker.RadioCheckView
             android:id="@+id/check_view_preview"
@@ -14,5 +18,12 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="end"/>
+    </FrameLayout>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/media_thumbnail_preview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/top_toolbar_preview"/>
 
 </RelativeLayout>

@@ -86,6 +86,7 @@ public class PreviewActivity extends AppCompatActivity implements View.OnClickLi
             holder.imageID = viewPagerItem.imageID;
             holder.imageRotate = viewPagerItem.imageRotate;
             holder.checked = viewPagerItem.checked;
+            fetcher.fetch(holder.imageID, holder.thumbnail, 0, holder.imageRotate);
         }
 
         @Override
@@ -105,7 +106,6 @@ public class PreviewActivity extends AppCompatActivity implements View.OnClickLi
                 radioCheckView = itemView.findViewById(R.id.check_view_preview);
                 radioCheckView.setOnClickListener(this);
                 thumbnail = itemView.findViewById(R.id.media_thumbnail_preview);
-                fetcher.fetch(imageID, thumbnail, 0, imageRotate);
             }
 
             @Override
